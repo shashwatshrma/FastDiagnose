@@ -39,6 +39,7 @@ export default function Diabetic_retinopathy() {
   }
   async function get_diagnosis() {
     if (fileLeft != "/uploadImage.svg") {
+      setOutputLeft("Working...");
       let imageElement = document.querySelector("#leftEye");
       let imageTensor = tf.tidy(() => {
         return tf.browser
@@ -61,6 +62,7 @@ export default function Diabetic_retinopathy() {
       }
     }
     if (fileRight != "/uploadImage.svg") {
+      setOutputRight("Working...");
       let imageElement = document.querySelector("#rightEye");
       let imageTensor = tf.browser
         .fromPixels(imageElement, 3)
