@@ -4,13 +4,12 @@ import { useState } from "react";
 import Image from "next/image";
 import Button from "@/components/Button";
 import AppBar from "@/components/AppBar";
-import { diagnose } from "@/app/lib/diabetic_retinopathy.js";
 import { jetbrains_mono } from "@/fonts/fonts";
 import * as tf from "@tensorflow/tfjs";
 
 export default function diabetic_retinopathy() {
-  let model=null;
-  
+  let model = null;
+
   const [fileLeft, setFileLeft] = useState("/uploadImage.svg");
   const [fileRight, setFileRight] = useState("/uploadImage.svg");
   const [outputLeft, setOutputLeft] = useState(
@@ -27,27 +26,31 @@ export default function diabetic_retinopathy() {
   function show_right(e) {
     setFileRight(URL.createObjectURL(e.target.files[0]));
   }
-  
-  async function diagnose(image)
-  {
-    if(model == null)
-    {
-      model = await tf.loadLayersModel("http://localhost:8081/model.json");
-    }
-    let prediction = model.predict(image);
-    console.log(prediction);
-    return 0;
+
+  async function diagnose(image) {
+    model = await tf.loadGraphModel("http://localhost:8080/model.json");
+    let prediction = await model.predict(image);
+    let predictionArr = await prediction.array();
+    console.log(predictionArr);
+    await prediction.dispose();
+    await image.dispose();
+    await model.dispose();
+    return predictionArr[0][0] > predictionArr[0][1] ? 0 : 1;
   }
-  function get_diagnosis() {
+  async function get_diagnosis() {
     if (fileLeft != "/uploadImage.svg") {
       let imageElement = document.querySelector("#leftEye");
-      let imageTensor = tf.browser
-        .fromPixels(imageElement, 3)
-        .resizeNearestNeighbor([224, 224])
-        .expandDims()
-        .toFloat()
-        .div(255);
-      let leftRes = diagnose(imageTensor);  
+      let imageTensor = tf.tidy(() => {
+        return tf.browser
+          .fromPixels(imageElement, 3)
+          .resizeNearestNeighbor([224, 224])
+          .expandDims()
+          .toFloat()
+          .div(255);
+      });
+      let leftRes = await diagnose(imageTensor);
+      console.log(leftRes);
+      await imageTensor.dispose();
       switch (leftRes) {
         case 0:
           setOutputLeft("No Diabetic Retinopathy.");
@@ -57,15 +60,17 @@ export default function diabetic_retinopathy() {
           break;
       }
     }
-    /*
     if (fileRight != "/uploadImage.svg") {
-      let  imageElement = fileRight;
+      let imageElement = document.querySelector("#rightEye");
       let imageTensor = tf.browser
-        .fromPixels(imageElement, 1)
+        .fromPixels(imageElement, 3)
         .resizeNearestNeighbor([224, 224])
         .expandDims()
-        .toFloat();
-      let rightRes = diagnose(imageTensor);
+        .toFloat()
+        .div(255);
+      let rightRes = await diagnose(imageTensor);
+      console.log(rightRes);
+      await imageTensor.dispose();
       switch (rightRes) {
         case 0:
           setOutputRight("No Diabetic Retinopathy.");
@@ -75,7 +80,6 @@ export default function diabetic_retinopathy() {
           break;
       }
     }
-    */
   }
 
   return (
@@ -89,7 +93,7 @@ export default function diabetic_retinopathy() {
                 <div className="flex flex-col">
                   <Image
                     src={fileLeft}
-                    alt="uploadImage"  
+                    alt="uploadImage"
                     id="leftEye"
                     priority={true}
                     width={500}
