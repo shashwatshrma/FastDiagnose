@@ -14,6 +14,7 @@ export default function AppBar() {
   ];
   const buttons = appbar.map((page) => (
     <Link
+      key={page.name}
       href={page.page}
       className="action:scale-100 m-4 rounded-xl border-2 border-teal-400 bg-gray-800 pb-2 pl-4 pr-4 pt-2 transition hover:scale-105 hover:text-teal-400"
     >
