@@ -28,7 +28,7 @@ export default function Diabetic_retinopathy() {
   }
 
   async function diagnose(image) {
-    model = await tf.loadGraphModel(process.env.NEXT_PUBLIC_MODEL_PATH);
+    model = await tf.loadGraphModel(process.env.NEXT_PUBLIC_DR_BINARY_MODEL_PATH);
     let prediction = await model.predict(image);
     let predictionArr = await prediction.array();
     console.log(predictionArr);
