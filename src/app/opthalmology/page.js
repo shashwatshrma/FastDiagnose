@@ -5,11 +5,18 @@ import { jetbrains_mono } from "@/fonts/fonts";
 export default function Opthalmology() {
   const predictors = [
     {
-      name: "Diabetic Retinopathy",
+      name: "Diabetic Retinopathy (Binary)",
       icon: "/eyeIcon.svg",
       description:
-        "This diagnostic model takes a fundus image and is able to determine the stage of diabetic retinopathy.",
+        "This diagnostic model takes a fundus image and is able to determine whether a patient suffers from diabetic retinopathy or not. The diagnoser has an accuracy of 96%.",
       page: "/opthalmology/diabetic_retinopathy",
+    },
+    {
+      name: "Diabetic Retinopathy (Severity)",
+      icon: "/eyeIcon.svg",
+      description:
+        "This diagnostic model takes a fundus image and is able to determine the stage of diabetic retinopathy (from no diabetic retinopathy to proliferative diabetic retinopathy). The diagnoser has an accuracy of 79%.",
+      page: "/opthalmology/diabetic_retinopathy_multiclass",
     },
   ];
   return (
