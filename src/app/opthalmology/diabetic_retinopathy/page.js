@@ -7,7 +7,7 @@ import AppBar from "@/components/AppBar";
 import { jetbrains_mono } from "@/fonts/fonts";
 import * as tf from "@tensorflow/tfjs";
 
-export default function diabetic_retinopathy() {
+export default function Diabetic_retinopathy() {
   let model = null;
 
   const [fileLeft, setFileLeft] = useState("/uploadImage.svg");
