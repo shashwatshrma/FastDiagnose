@@ -46,14 +46,16 @@ export default function Diabetic_retinopathy() {
   }
 
   async function diagnose(image) {
-    model = await tf.loadGraphModel(process.env.NEXT_PUBLIC_DR_MULTI_MODEL_PATH);
+    model = await tf.loadGraphModel(
+      process.env.NEXT_PUBLIC_DR_MULTI_MODEL_PATH,
+    );
     let prediction = await model.predict(image);
     let predictionArr = await prediction.array();
     console.log(predictionArr);
     await prediction.dispose();
     await image.dispose();
     await model.dispose();
-    return indexOfMax(prediction[0]);
+    return indexOfMax(predictionArr[0]);
   }
 
   async function get_diagnosis() {
@@ -106,16 +108,16 @@ export default function Diabetic_retinopathy() {
           setOutputRight("No Diabetic Retinopathy.");
           break;
         case 1:
-          setOutputLeft("Mild Diabetic Retinopathy Detected!");
+          setOutputRight("Mild Diabetic Retinopathy Detected!");
           break;
         case 2:
-          setOutputLeft("Moderate Diabetic Retinopathy Detected!");
+          setOutputRight("Moderate Diabetic Retinopathy Detected!");
           break;
         case 3:
-          setOutputLeft("Severe Diabetic Retinopathy Detected!");
+          setOutputRight("Severe Diabetic Retinopathy Detected!");
           break;
         case 4:
-          setOutputLeft("Proliferative Diabetic Retinopathy Detected!");
+          setOutputRight("Proliferative Diabetic Retinopathy Detected!");
           break;
       }
     }
