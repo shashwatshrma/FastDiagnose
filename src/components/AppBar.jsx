@@ -5,7 +5,7 @@ export default function AppBar() {
   const appbar = [
     {
       name: "Github",
-      page: "https://github.com/shashwatshrma/Diabetic-Retinopathy",
+      page: "https://github.com/shashwatshrma/FastDiagnose",
     },
     {
       name: "About",
